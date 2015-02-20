@@ -1,5 +1,5 @@
 // Enemies our player must avoid
-var Enemy = function(x, y) {
+var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -8,7 +8,7 @@ var Enemy = function(x, y) {
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
     this.y = y;
-    this.speed = 100;
+    this.speed = speed;
 }
 
 // Update the enemy's position, required method for game
@@ -17,10 +17,8 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    // while (this.x <= ctx.canvas.width) {
+
         this.x += this.speed * dt;
-    // console.log(this.x);
-    // }
 }
 
 // Draw the enemy on the screen, required method for game
@@ -33,29 +31,32 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.x = 200;
-    this.y = 400;
-    this.direction = ['left', 'up', 'right', 'down'];
-    this.key;
-    this.move = false; //= direction[1];
+    this.x = 200; //initial position for player in the x axis
+    this.y = 400; //initial position for player in the y axis
+    this.direction = ['left', 'up', 'right', 'down']; //possible movements for player
+    this.key; //keeps the value of direction[] after pressing the corresponding arrow in the keyboard
+    this.move = false; //becomes true right after releasing one of the arrow keys
 }
 
 Player.prototype.update = function() {
+    // this will be executed once we release one of the arrow keys
     while (this.move) {
-        if (this.move && this.key == this.direction[0]) {
+        if (this.key == this.direction[0]) {
             this.x -= 100;
             this.move = false;
-        } else if (this.move && this.key == this.direction[1]) {
+        } else if (this.key == this.direction[1]) {
             this.y -= Resources.get(stone_block).height / 2;
             this.move = false; 
-        } else if (this.move && this.key == this.direction[2]) {
+        } else if (this.key == this.direction[2]) {
             this.x +=100;
             this.move = false;
         } else {
             this.y += Resources.get(stone_block).height / 2;
             this.move = false;
         }
+        
     }
+
 }
 
 Player.prototype.render = function() {
@@ -63,6 +64,8 @@ Player.prototype.render = function() {
 }
 
 Player.prototype.handleInput = function(keyCode) {
+    // checks which arrow key has been pressed and assigns the corresponding direction
+    // to the key variable. Changes move to true.
     if (keyCode != null) {
         if (keyCode === 'left') {
             this.key = this.direction[0];
@@ -79,13 +82,32 @@ Player.prototype.handleInput = function(keyCode) {
         }
     }
 }
+// if (rect1.x < rect2.x + rect2.width &&
+//    rect1.x + rect1.width > rect2.x &&
+//    rect1.y < rect2.y + rect2.height &&
+//    rect1.height + rect1.y > rect2.y) {
+//     // collision detected!
+
+
+//TODO: redefine method for better width detection
+var checkCollisions = function() {
+    for (var i=0; i<allEnemies.length; i++) {
+        if (player.x < allEnemies[0].x + Resources.get(allEnemies[0].sprite).width &&
+            player.x + Resources.get(player.sprite).width > allEnemies[0].x &&
+            player.y < allEnemies[0].y + Resources.get(allEnemies[0].sprite).height &&
+            player.y + Resources.get(player.sprite).height > allEnemies[0].y) {
+            alert ("COLLISION!");
+        }
+    }
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var allEnemies = [];
-var enemy1 = new Enemy(0, 225);
-allEnemies.push(enemy1);
+var enemy1 = new Enemy(0, 225, 0);
+var enemy2 = new Enemy(0, 125, 70);
+allEnemies.push(enemy1, enemy2);
 var player = new Player();
 
 var stone_block = 'images/stone-block.png';

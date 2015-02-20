@@ -138,6 +138,11 @@ var Engine = (function(global) {
 
 
         renderEntities();
+
+
+        ctx.lineWidth = 5;
+        ctx.strokeRect(200, 400, 101, 171);
+        ctx.strokeRect(0, 225, 101, 171);
     }
 
     /* This function is called by the render function and is called on each game
@@ -153,6 +158,7 @@ var Engine = (function(global) {
         });
 
         player.render();
+        checkCollisions();
     }
 
     /* This function does nothing but it could have been a good place to
