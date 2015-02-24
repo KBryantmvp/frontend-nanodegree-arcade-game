@@ -47,10 +47,6 @@ var col = [0, 101, 202, 303, 404]; //5 columns with 101 pixels width starting in
 // a handleInput() method.
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    var playerOffsetX = 17;
-    var playerOffsetY = 63;
-    var playerWidth = 68;
-    var playerHeight = 77;
     this.x = 200; //initial position for player in the x axis
     this.y = 400; //initial position for player in the y axis
     this.direction = ['left', 'up', 'right', 'down']; //possible movements for player
@@ -152,13 +148,17 @@ Player.prototype.handleInput = function(keyCode) {
 
 //TODO: redefine method for better width detection
 var checkCollisions = function() {
+    var playerOffsetX = 17;
+    var playerOffsetY = 63;
+    var playerWidth = 68;
+    var playerHeight = 77;
+    var enemyWidth = 100;
+    var enemyHeight = 67;
     for (var i=0; i<allEnemies.length; i++) {
-        if (player.x + 17 < allEnemies[0].x + Resources.get(allEnemies[0].sprite).width - 1 &&
-            player.x + Resources.get(player.sprite).width - 16 > allEnemies[0].x &&
-            player.y + 63 < allEnemies[0].y + Resources.get(allEnemies[0].sprite).height - 28 &&
-            player.y + Resources.get(player.sprite).height - 31 > allEnemies[0].y + 76) {
-            // alert ("COLLISION!");
-            console.log("nooooo");
+        if (player.x + playerOffsetX < allEnemies[i].x + enemyWidth &&
+            player.x + playerOffsetX + playerWidth > allEnemies[i].x &&
+            player.y + playerOffsetY < allEnemies[i].y + enemyHeight &&
+            player.y + playerOffsetY + playerHeight > allEnemies[i].y) {
             return true;
         }
     }
@@ -175,7 +175,6 @@ var enemyLevel = function() {
     var speed =[];
     var randomSpeed;
     while (gameLevel == 1 && allEnemies.length < 3) {
-        console.log("hola");
         speed = [40, 55, 70];
         randomSpeed = speed[Math.floor(Math.random() * speed.length)];
         allEnemies.push(new Enemy(randomSpeed));

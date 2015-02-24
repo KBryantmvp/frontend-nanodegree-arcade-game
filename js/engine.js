@@ -181,10 +181,9 @@ var Engine = (function(global) {
 
         player.render();
         player.winLevel();
-        // if (checkCollisions() === true) {
-        //     console.log("collision");
-        // }
-        // test();
+        if(checkCollisions()) {
+            player.resetPlayer();
+        }
     }
 
     /* This function does nothing but it could have been a good place to
