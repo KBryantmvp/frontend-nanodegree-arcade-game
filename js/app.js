@@ -45,11 +45,22 @@ var enemyRowOffset = [58, 141, 224, 307, 390, 473]; //6 rows with 83 pixels heig
 // a handleInput() method.
 var Player = function() {
     this.sprite = 'images/char-boy.png';
+    var playerOffsetX = 17;
+    var playerOffsetY = 63;
+    var playerWidth = 68;
+    var playerHeight = 77;
     this.x = 200; //initial position for player in the x axis
     this.y = 400; //initial position for player in the y axis
     this.direction = ['left', 'up', 'right', 'down']; //possible movements for player
     this.key; //keeps the value of direction[] after pressing the corresponding arrow in the keyboard
     this.move = false; //becomes true right after releasing one of the arrow keys
+    //these variables check if the player has reached the limits of the board to avoid
+    //moving the player out of bounds
+    this.leftBound = true;
+    this.upBound = true;
+    this.rightBound = true;
+    this.downBound = false;
+
 }
 
 Player.prototype.update = function() {
@@ -58,17 +69,31 @@ Player.prototype.update = function() {
         if (this.key == this.direction[0]) {
             this.x -= 100;
             this.move = false;
+            this.rightBound = true;
+            if (this.x == 0) {
+                this.leftBound = false;
+            }
         } else if (this.key == this.direction[1]) {
-            // this.y -= Resources.get(stone_block).height / 2;
             this.y -= 83;
-            this.move = false; 
+            this.move = false;
+            this.downBound = true;
+            if (this.y == -15) {
+                this.upBound = false;
+            }
         } else if (this.key == this.direction[2]) {
             this.x +=100;
             this.move = false;
+            this.leftBound = true;
+            if (this.x == 400) {
+                this.rightBound = false;
+            }
         } else {
-            // this.y += Resources.get(stone_block).height / 2;
             this.y += 83;
             this.move = false;
+            this.upBound = true;
+            if (this.y == 400) {
+                this.downBound = false;
+            }
         }
         
     }
@@ -78,20 +103,27 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
+Player.prototype.winLevel = function() {
+    if (player.y ) {
+
+    }
+}
+
 Player.prototype.handleInput = function(keyCode) {
     // checks which arrow key has been pressed and assigns the corresponding direction
     // to the key variable. Changes move to true.
     if (keyCode != null) {
-        if (keyCode === 'left') {
+        //the player only moves when it is in of bounds
+        if (keyCode === 'left' && this.leftBound) {
             this.key = this.direction[0];
             this.move = true;
-        } else if (keyCode === 'up') {
+        } else if (keyCode === 'up' && this.upBound) {
             this.key = this.direction[1];
             this.move = true;
-        } else if (keyCode === 'right') {
+        } else if (keyCode === 'right' && this.rightBound) {
             this.key = this.direction[2];
             this.move = true;
-        } else {
+        } else if (keyCode === 'down' && this.downBound) {
             this.key = this.direction[3];
             this.move = true;
         }
@@ -132,6 +164,8 @@ allEnemies.push(enemy1, enemy2);
 var player = new Player();
 
 var stone_block = 'images/stone-block.png';
+
+var gameLevel = 1; //keep tracks the game level starting in level 1
 
 
 // This listens for key presses and sends the keys to your
