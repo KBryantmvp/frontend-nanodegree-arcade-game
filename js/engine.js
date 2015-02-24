@@ -141,8 +141,28 @@ var Engine = (function(global) {
 
 
         ctx.lineWidth = 5;
-        ctx.strokeRect(200, 400, 101, 171);
-        ctx.strokeRect(0, 225, 101, 171);
+        ctx.strokeStyle = 'black';
+        // ctx.strokeRect(200, 400, 101, 171);
+        // ctx.strokeRect(0, 225, 101, 171);
+        ctx.strokeRect(0, 0, 20, 20);
+        // ctx.strokeRect(0, 215, 101, 171);
+        ctx.strokeRect(101, 0, 5 ,5);
+        ctx.moveTo(0, 131);
+        ctx.lineTo(505, 131);
+        ctx.moveTo(0, 215);
+        ctx.lineTo(505, 215);
+        ctx.moveTo(0, 49);
+        ctx.lineTo(505,49);
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(0, 49, 10, 10);
+        ctx.strokeRect(0, 58, 10, 10);
+        ctx.strokeRect(0, 141, 10, 10);
+        ctx.strokeRect(0, 224, 10, 10);
+        ctx.strokeRect(0, 307, 10, 10);
+        // ctx.strokeRect(0, 291, 100, 67);
+        // ctx.strokeRect(17, 463, 68, 77);
+        ctx.stroke();
     }
 
     /* This function is called by the render function and is called on each game
@@ -158,7 +178,10 @@ var Engine = (function(global) {
         });
 
         player.render();
-        checkCollisions();
+        // if (checkCollisions() === true) {
+        //     console.log("collision");
+        // }
+        // test();
     }
 
     /* This function does nothing but it could have been a good place to

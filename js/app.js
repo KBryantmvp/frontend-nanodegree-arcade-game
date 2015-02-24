@@ -1,13 +1,16 @@
 // Enemies our player must avoid
-var Enemy = function(x, y, speed) {
+var Enemy = function(speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = x;
-    this.y = y;
+    this.x = -102;
+    // this.y = 214;
+    var enemyRow = [1, 2, 3];
+    this.row = enemyRow[(Math.floor(Math.random() * enemyRow.length))];
+    this.y = this.row;
     this.speed = speed;
 }
 
@@ -17,14 +20,25 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-
-        this.x += this.speed * dt;
+    for (var i=0; i<allEnemies.length; i++) {
+        if (allEnemies[i].x <= ctx.canvas.width) {
+            allEnemies[i].x += allEnemies[i].speed * dt;
+        } else {
+            allEnemies.splice(i, 1);
+        }
+    }
 }
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), 0, 76, 100, 67, this.x, enemyRowOffset[this.y], 100, 67);
+    // ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
+
+
+//arrays with the pixel where columns and rows start
+var col = [0, 101, 202, 303, 404]; //5 columns with 101 pixels width starting in pixel 0
+var enemyRowOffset = [58, 141, 224, 307, 390, 473]; //6 rows with 83 pixels height starting in pixel 58 (that is first water block)
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -45,18 +59,19 @@ Player.prototype.update = function() {
             this.x -= 100;
             this.move = false;
         } else if (this.key == this.direction[1]) {
-            this.y -= Resources.get(stone_block).height / 2;
+            // this.y -= Resources.get(stone_block).height / 2;
+            this.y -= 83;
             this.move = false; 
         } else if (this.key == this.direction[2]) {
             this.x +=100;
             this.move = false;
         } else {
-            this.y += Resources.get(stone_block).height / 2;
+            // this.y += Resources.get(stone_block).height / 2;
+            this.y += 83;
             this.move = false;
         }
         
     }
-
 }
 
 Player.prototype.render = function() {
@@ -92,21 +107,27 @@ Player.prototype.handleInput = function(keyCode) {
 //TODO: redefine method for better width detection
 var checkCollisions = function() {
     for (var i=0; i<allEnemies.length; i++) {
-        if (player.x < allEnemies[0].x + Resources.get(allEnemies[0].sprite).width &&
-            player.x + Resources.get(player.sprite).width > allEnemies[0].x &&
-            player.y < allEnemies[0].y + Resources.get(allEnemies[0].sprite).height &&
-            player.y + Resources.get(player.sprite).height > allEnemies[0].y) {
-            alert ("COLLISION!");
+        if (player.x + 17 < allEnemies[0].x + Resources.get(allEnemies[0].sprite).width - 1 &&
+            player.x + Resources.get(player.sprite).width - 16 > allEnemies[0].x &&
+            player.y + 63 < allEnemies[0].y + Resources.get(allEnemies[0].sprite).height - 28 &&
+            player.y + Resources.get(player.sprite).height - 31 > allEnemies[0].y + 76) {
+            // alert ("COLLISION!");
+            console.log("nooooo");
+            return true;
         }
     }
+}
+
+var test = function() {
+    console.log("test");
 }
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var allEnemies = [];
-var enemy1 = new Enemy(0, 225, 0);
-var enemy2 = new Enemy(0, 125, 70);
+var enemy1 = new Enemy(20);
+var enemy2 = new Enemy(70);
 allEnemies.push(enemy1, enemy2);
 var player = new Player();
 
