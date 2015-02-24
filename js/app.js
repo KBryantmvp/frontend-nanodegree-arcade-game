@@ -7,10 +7,10 @@ var Enemy = function(speed) {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     this.x = -102;
-    // this.y = 214;
     var enemyRow = [1, 2, 3];
+    var enemyRowOffset = [58, 141, 224, 307, 390, 473]; //6 rows with 83 pixels height starting in pixel 58 (that is first water block)
     this.row = enemyRow[(Math.floor(Math.random() * enemyRow.length))];
-    this.y = this.row;
+    this.y = enemyRowOffset[this.row];
     this.speed = speed;
 }
 
@@ -20,6 +20,7 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    //only updates position if enemy still visible on board
     for (var i=0; i<allEnemies.length; i++) {
         if (allEnemies[i].x <= ctx.canvas.width) {
             allEnemies[i].x += allEnemies[i].speed * dt;
@@ -31,14 +32,14 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), 0, 76, 100, 67, this.x, enemyRowOffset[this.y], 100, 67);
+    ctx.drawImage(Resources.get(this.sprite), 0, 76, 100, 67, this.x, this.y, 100, 67);
     // ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
 
 //arrays with the pixel where columns and rows start
 var col = [0, 101, 202, 303, 404]; //5 columns with 101 pixels width starting in pixel 0
-var enemyRowOffset = [58, 141, 224, 307, 390, 473]; //6 rows with 83 pixels height starting in pixel 58 (that is first water block)
+
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -54,6 +55,7 @@ var Player = function() {
     this.direction = ['left', 'up', 'right', 'down']; //possible movements for player
     this.key; //keeps the value of direction[] after pressing the corresponding arrow in the keyboard
     this.move = false; //becomes true right after releasing one of the arrow keys
+
     //these variables check if the player has reached the limits of the board to avoid
     //moving the player out of bounds
     this.leftBound = true;
@@ -104,9 +106,20 @@ Player.prototype.render = function() {
 }
 
 Player.prototype.winLevel = function() {
-    if (player.y ) {
-
+    if (this.y  == -15) {
+        gameLevel ++;
+        console.log("gameLevel: " + gameLevel);
+        this.resetPlayer();
     }
+}
+
+Player.prototype.resetPlayer = function() {
+    this.x = 200;
+    this.y = 400;
+    this.leftBound = true;
+    this.upBound = true;
+    this.rightBound = true;
+    this.downBound = false;
 }
 
 Player.prototype.handleInput = function(keyCode) {
@@ -157,6 +170,9 @@ var test = function() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+var enemyLevel = function() {
+
+}
 var allEnemies = [];
 var enemy1 = new Enemy(20);
 var enemy2 = new Enemy(70);

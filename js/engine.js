@@ -178,6 +178,7 @@ var Engine = (function(global) {
         });
 
         player.render();
+        player.winLevel();
         // if (checkCollisions() === true) {
         //     console.log("collision");
         // }
