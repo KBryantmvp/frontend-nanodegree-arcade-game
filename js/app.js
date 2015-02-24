@@ -20,7 +20,8 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    //only updates position if enemy still visible on board
+    // only updates position if enemy still visible on board
+    // otherwise remove enemy from allEnemies[]
     for (var i=0; i<allEnemies.length; i++) {
         if (allEnemies[i].x <= ctx.canvas.width) {
             allEnemies[i].x += allEnemies[i].speed * dt;
@@ -171,17 +172,32 @@ var test = function() {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var enemyLevel = function() {
-
+    var speed =[];
+    var randomSpeed;
+    while (gameLevel == 1 && allEnemies.length < 3) {
+        console.log("hola");
+        speed = [40, 55, 70];
+        randomSpeed = speed[Math.floor(Math.random() * speed.length)];
+        allEnemies.push(new Enemy(randomSpeed));
+    }
+    while (gameLevel ==2 && allEnemies.length < 4) {
+        speed = [55, 70, 100];
+        randomSpeed = speed[Math.floor(Math.random() * speed.length)];
+        allEnemies.push(new Enemy(randomSpeed));
+    }
+    while (gameLevel == 3 && allEnemies.length < 5) {
+        speed = [70, 100, 110];
+        randomSpeed = speed[Math.floor(Math.random() * speed.length)];
+        allEnemies.push(new Enemy(randomSpeed));
+    }
 }
 var allEnemies = [];
-var enemy1 = new Enemy(20);
-var enemy2 = new Enemy(70);
-allEnemies.push(enemy1, enemy2);
+var gameLevel = 1; //keep tracks the game level starting in level 1
 var player = new Player();
 
 var stone_block = 'images/stone-block.png';
 
-var gameLevel = 1; //keep tracks the game level starting in level 1
+
 
 
 // This listens for key presses and sends the keys to your

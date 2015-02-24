@@ -66,6 +66,7 @@ var Engine = (function(global) {
     function init() {
         reset();
         lastTime = Date.now();
+        enemyLevel();
         main();
     }
 
@@ -175,6 +176,7 @@ var Engine = (function(global) {
          */
         allEnemies.forEach(function(enemy) {
             enemy.render();
+            enemyLevel();
         });
 
         player.render();
