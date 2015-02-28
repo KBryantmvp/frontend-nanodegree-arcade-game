@@ -52,6 +52,7 @@ var Player = function() {
     this.direction = ['left', 'up', 'right', 'down']; //possible movements for player
     this.key; //keeps the value of direction[] after pressing the corresponding arrow in the keyboard
     this.move = false; //becomes true right after releasing one of the arrow keys
+    this.lives = 3;
 
     //these variables check if the player has reached the limits of the board to avoid
     //moving the player out of bounds
@@ -118,6 +119,21 @@ Player.prototype.resetPlayer = function() {
     this.downBound = false;
 }
 
+Player.prototype.playerLives = function() {
+    var canvasRight = document.getElementById('canvas-right');
+    var ctxRight = canvasRight.getContext('2d');
+    ctxRight.fillStyle = 'white';
+    ctxRight.fillRect(0, 0, canvasRight.width, canvasRight.height);
+    ctxRight.drawImage(Resources.get(playerSelected), 10, 10, 50, 90);
+
+    ctxRight.fillStyle = 'black';
+    ctxRight.font = '40px arcadeClassic';
+    ctxRight.fillText('X', 59, 85);
+    ctxRight.font = '60px arcadeClassic';
+    ctxRight.fillText(this.lives, 87, 87);
+    ctxRight.fillText(gameLevel, 150, 90);
+}
+
 Player.prototype.handleInput = function(keyCode) {
     // checks which arrow key has been pressed and assigns the corresponding direction
     // to the key variable. Changes move to true.
@@ -158,6 +174,7 @@ var checkCollisions = function() {
             player.x + playerOffsetX + playerWidth > allEnemies[i].x &&
             player.y + playerOffsetY < allEnemies[i].y + enemyHeight &&
             player.y + playerOffsetY + playerHeight > allEnemies[i].y) {
+            player.lives --;
             return true;
         }
     }
@@ -186,13 +203,16 @@ var enemyLevel = function() {
         allEnemies.push(new Enemy(randomSpeed));
     }
 }
+
+var addLife = function() {
+    ctx.drawImage(Resources.get(heart), 100, 150);
+    player.lives ++;
+}
+
 var allEnemies = [];
 var gameLevel = 1; //keep tracks the game level starting in level 1
 var player = new Player();
-
-var stone_block = 'images/stone-block.png';
-
-
+var heart = 'images/Heart.png';
 
 
 // This listens for key presses and sends the keys to your

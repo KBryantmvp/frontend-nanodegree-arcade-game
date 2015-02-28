@@ -53,7 +53,6 @@ var Engine = (function(global) {
          * for the next time this function is called.
          */
         lastTime = now;
-
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
@@ -67,6 +66,7 @@ var Engine = (function(global) {
     function init() {
         reset();
         lastTime = Date.now();
+        playerSelection();
         enemyLevel();
         main();
     }
@@ -189,7 +189,12 @@ var Engine = (function(global) {
         winGame();
         if(checkCollisions()) {
             player.resetPlayer();
-        }
+            if (player.lives == 0) {
+                alert("GAME OVER!");
+                init();
+            }
+        } 
+        player.playerLives();
     }
 
     function winGame() {
@@ -206,6 +211,8 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        player.lives = 3;
+        gameLevel = 1;
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -221,7 +228,8 @@ var Engine = (function(global) {
         'images/char-cat-girl.png',
         'images/char-horn-girl.png',
         'images/char-pink-girl.png',
-        'images/char-princess-girl.png'
+        'images/char-princess-girl.png',
+        'images/Heart.png'
     ]);
     Resources.onReady(init);
 

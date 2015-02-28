@@ -27,6 +27,12 @@ body {
 #col2 {
     display: inline-block;
     margin-left: 40px;
+    margin-right: 40px;
+}
+
+#col3 {
+    margin-top: 60px;
+    display: inline-block;
 }
 
 h2 {
