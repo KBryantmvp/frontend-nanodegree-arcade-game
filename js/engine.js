@@ -24,10 +24,11 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
+        col2 = doc.getElementById('col2');
 
     canvas.width = 505;
     canvas.height = 606;
-    doc.body.appendChild(canvas);
+    col2.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -140,30 +141,34 @@ var Engine = (function(global) {
 
         renderEntities();
 
+        // White rectangle to avoid painting pixels of player out of bounds
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, 505, 50);
 
-        ctx.lineWidth = 5;
-        ctx.strokeStyle = 'black';
-        // ctx.strokeRect(200, 400, 101, 171);
-        // ctx.strokeRect(0, 225, 101, 171);
-        ctx.strokeRect(0, 0, 20, 20);
-        // ctx.strokeRect(0, 215, 101, 171);
-        ctx.strokeRect(101, 0, 5 ,5);
-        ctx.moveTo(0, 131);
-        ctx.lineTo(505, 131);
-        ctx.moveTo(0, 215);
-        ctx.lineTo(505, 215);
-        ctx.moveTo(0, 49);
-        ctx.lineTo(505,49);
-        ctx.strokeStyle = 'red';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(0, 49, 10, 10);
-        ctx.strokeRect(0, 58, 10, 10);
-        ctx.strokeRect(0, 141, 10, 10);
-        ctx.strokeRect(0, 224, 10, 10);
-        ctx.strokeRect(0, 307, 10, 10);
-        // ctx.strokeRect(0, 291, 100, 67);
-        // ctx.strokeRect(17, 463, 68, 77);
-        ctx.stroke();
+
+        // ctx.lineWidth = 5;
+        // ctx.strokeStyle = 'black';
+        // // ctx.strokeRect(200, 400, 101, 171);
+        // // ctx.strokeRect(0, 225, 101, 171);
+        // ctx.strokeRect(0, 0, 20, 20);
+        // // ctx.strokeRect(0, 215, 101, 171);
+        // ctx.strokeRect(101, 0, 5 ,5);
+        // ctx.moveTo(0, 131);
+        // ctx.lineTo(505, 131);
+        // ctx.moveTo(0, 215);
+        // ctx.lineTo(505, 215);
+        // ctx.moveTo(0, 49);
+        // ctx.lineTo(505,49);
+        // ctx.strokeStyle = 'red';
+        // ctx.lineWidth = 1;
+        // ctx.strokeRect(0, 49, 10, 10);
+        // ctx.strokeRect(0, 58, 10, 10);
+        // ctx.strokeRect(0, 141, 10, 10);
+        // ctx.strokeRect(0, 224, 10, 10);
+        // ctx.strokeRect(0, 307, 10, 10);
+        // // ctx.strokeRect(0, 291, 100, 67);
+        // // ctx.strokeRect(17, 463, 68, 77);
+        // ctx.stroke();
     }
 
     /* This function is called by the render function and is called on each game
@@ -181,8 +186,17 @@ var Engine = (function(global) {
 
         player.render();
         player.winLevel();
+        winGame();
         if(checkCollisions()) {
             player.resetPlayer();
+        }
+    }
+
+    function winGame() {
+        if (gameLevel > 3) {
+            gameLevel = 1;
+            enemyLevel();
+            alert("CONGRATULATIONS, YOU WON!")
         }
     }
 
@@ -203,7 +217,11 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png'
     ]);
     Resources.onReady(init);
 

@@ -105,7 +105,6 @@ Player.prototype.render = function() {
 Player.prototype.winLevel = function() {
     if (this.y  == -15) {
         gameLevel ++;
-        console.log("gameLevel: " + gameLevel);
         this.resetPlayer();
     }
 }
@@ -164,9 +163,6 @@ var checkCollisions = function() {
     }
 }
 
-var test = function() {
-    console.log("test");
-}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies

@@ -4,9 +4,60 @@
     <title>Effective JavaScript: Frogger</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body onload='playerSelection()'>
+    <div id="col1">
+        <h2>Select player</h2>
+        <canvas id="canvas-left" width="300" height="180"></canvas><br>
+        <button id="leftBtn"></button>
+        <button id="rightBtn"></button>
+    </div>
+    <div id="col2"></div>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
+    <script type="text/javascript">
+        var canvasLeft = document.getElementById('canvas-left');
+        var ctxLeft = canvasLeft.getContext('2d');
+        ctxLeft.fillStyle = 'white';
+        var selectPlayer = [];
+        var grassBlock = 'images/grass-block.png';
+
+        function playerSelection() {
+            var boy = 'images/char-boy.png';
+            var catGirl = 'images/char-cat-girl.png';
+            var hornGirl = 'images/char-horn-girl.png';
+            var pinkGirl = 'images/char-pink-girl.png';
+            var princessGirl = 'images/char-princess-girl.png';
+            
+            selectPlayer.push(boy, catGirl, hornGirl, pinkGirl, princessGirl);
+            document.getElementById('leftBtn').addEventListener('click', leftSelec);
+            document.getElementById('rightBtn').addEventListener('click', rightSelec);
+            ctxLeft.drawImage(Resources.get(grassBlock), 100, 0);
+            ctxLeft.drawImage(Resources.get(selectPlayer[index]), 100, 0);
+        }
+
+        var index = 0;
+
+
+        function leftSelec() {
+            if (index > 0) {
+                index --;
+                ctxLeft.fillRect(0, 0, canvasLeft.width, canvasLeft.height);
+                ctxLeft.drawImage(Resources.get(grassBlock), 100, 0);
+                ctxLeft.drawImage(Resources.get(selectPlayer[index]), 100, 0);
+                player.sprite = selectPlayer[index];
+            }
+        }
+
+        function rightSelec() {
+            if (index < selectPlayer.length - 1) {
+                index ++;
+                ctxLeft.fillRect(0, 0, canvasLeft.width, canvasLeft.height);
+                ctxLeft.drawImage(Resources.get(grassBlock), 100, 0);
+                ctxLeft.drawImage(Resources.get(selectPlayer[index]), 100, 0);
+                player.sprite = selectPlayer[index];
+            }
+        }
+    </script>
 </body>
 </html>
