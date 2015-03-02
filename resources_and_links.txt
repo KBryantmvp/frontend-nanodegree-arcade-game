@@ -1,0 +1,8 @@
+Resources:
+
+1. http://www.w3schools.com/js/js_loop_while.asp
+2. http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
+3. http://www.w3schools.com/jsref/event_onkeyup.asp
+4. https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+5. For game fonts: http://www.1001fonts.com/video-game-fonts.html?page=1&items=10
+6. I have read all posts in the discussion forums and have opened new topics to solve doubts.
