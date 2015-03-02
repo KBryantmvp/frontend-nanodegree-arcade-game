@@ -8,9 +8,9 @@ var Enemy = function(speed) {
     this.sprite = 'images/enemy-bug.png';
     this.x = -102;
     var enemyRow = [1, 2, 3];
-    var enemyRowOffset = [58, 141, 224, 307, 390, 473]; //6 rows with 83 pixels height starting in pixel 58 (that is first water block)
+    var enemyRowOffset = [58, 141, 224, 307, 390, 473]; //6 rows with 83 pixels height starting in pixel 58
     this.row = enemyRow[(Math.floor(Math.random() * enemyRow.length))];
-    this.y = enemyRowOffset[this.row];
+    this.y = enemyRowOffset[this.row]; // Position of the enemy in the Y axis
     this.speed = speed;
 }
 
@@ -20,7 +20,7 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    // only updates position if enemy still visible on board
+    // Only updates position if enemy still visible on board
     // otherwise remove enemy from allEnemies[]
     for (var i=0; i<allEnemies.length; i++) {
         if (allEnemies[i].x <= ctx.canvas.width) {
@@ -39,7 +39,7 @@ Enemy.prototype.render = function() {
 
 
 //arrays with the pixel where columns and rows start
-var col = [0, 101, 202, 303, 404]; //5 columns with 101 pixels width starting in pixel 0
+// var col = [0, 101, 202, 303, 404]; //5 columns with 101 pixels width starting in pixel 0
 
 
 // Now write your own player class
@@ -47,12 +47,12 @@ var col = [0, 101, 202, 303, 404]; //5 columns with 101 pixels width starting in
 // a handleInput() method.
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.x = 200; //initial position for player in the x axis
-    this.y = 400; //initial position for player in the y axis
+    this.x = 200; //initial position for player in the X axis
+    this.y = 400; //initial position for player in the Y axis
     this.direction = ['left', 'up', 'right', 'down']; //possible movements for player
     this.key; //keeps the value of direction[] after pressing the corresponding arrow in the keyboard
     this.move = false; //becomes true right after releasing one of the arrow keys
-    this.lives = 3;
+    this.lives = 3; // initial lives of player
 
     //these variables check if the player has reached the limits of the board to avoid
     //moving the player out of bounds
@@ -103,13 +103,7 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
-Player.prototype.winLevel = function() {
-    if (this.y  == -15) {
-        gameLevel ++;
-        this.resetPlayer();
-    }
-}
-
+// This method will be called after a collision with an enemy or after winning a level
 Player.prototype.resetPlayer = function() {
     this.x = 200;
     this.y = 400;
@@ -117,21 +111,6 @@ Player.prototype.resetPlayer = function() {
     this.upBound = true;
     this.rightBound = true;
     this.downBound = false;
-}
-
-Player.prototype.playerLives = function() {
-    var canvasRight = document.getElementById('canvas-right');
-    var ctxRight = canvasRight.getContext('2d');
-    ctxRight.fillStyle = 'white';
-    ctxRight.fillRect(0, 0, canvasRight.width, canvasRight.height);
-    ctxRight.drawImage(Resources.get(playerSelected), 10, 10, 50, 90);
-
-    ctxRight.fillStyle = 'black';
-    ctxRight.font = '40px arcadeClassic';
-    ctxRight.fillText('X', 59, 85);
-    ctxRight.font = '60px arcadeClassic';
-    ctxRight.fillText(this.lives, 87, 87);
-    ctxRight.fillText(gameLevel, 150, 90);
 }
 
 Player.prototype.handleInput = function(keyCode) {
@@ -154,21 +133,42 @@ Player.prototype.handleInput = function(keyCode) {
         }
     }
 }
-// if (rect1.x < rect2.x + rect2.width &&
-//    rect1.x + rect1.width > rect2.x &&
-//    rect1.y < rect2.y + rect2.height &&
-//    rect1.height + rect1.y > rect2.y) {
-//     // collision detected!
 
+// Lives that the player can get during the game
+var Heart = function() {
+    this.x = 300;
+    this.y = 151;
+    this.sprite = 'images/Heart.png';
 
-//TODO: redefine method for better width detection
+    // If the player gets the life this variable will turn false
+    // for the rest of the level
+    this.display = true;
+}
+
+// Only 2 lives will be available 
+Heart.prototype.update = function() {
+    if (gameLevel == 1 && this.display) {
+        this.x = 300;
+        this.y = 151;
+    } else if (gameLevel == 2 && this.display) {
+        this.x = 0;
+        this.y = 68;
+    } else {
+        this.x = -100;
+        this.y = -100;
+    }
+}
+
+// The life will be drawn in levels 1 and 2 and only if the player
+// has not got it yet
+Heart.prototype.render = function() {
+    if ((gameLevel == 1 || gameLevel == 2) && this.display) {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+}
+
+// Checks if the player and the enemies have collided
 var checkCollisions = function() {
-    var playerOffsetX = 17;
-    var playerOffsetY = 63;
-    var playerWidth = 68;
-    var playerHeight = 77;
-    var enemyWidth = 100;
-    var enemyHeight = 67;
     for (var i=0; i<allEnemies.length; i++) {
         if (player.x + playerOffsetX < allEnemies[i].x + enemyWidth &&
             player.x + playerOffsetX + playerWidth > allEnemies[i].x &&
@@ -180,10 +180,24 @@ var checkCollisions = function() {
     }
 }
 
+// Controls and displays canvas on the right including the actual level
+// and lives of the player
+var playerLives = function() {
+    var canvasRight = document.getElementById('canvas-right');
+    var ctxRight = canvasRight.getContext('2d');
+    ctxRight.fillStyle = 'white';
+    ctxRight.fillRect(0, 0, canvasRight.width, canvasRight.height);
+    ctxRight.drawImage(Resources.get(playerSelected), 10, 70, 50, 90);
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+    ctxRight.fillStyle = 'black';
+    ctxRight.font = '40px arcadeClassic';
+    ctxRight.fillText('X', 59, 145);
+    ctxRight.font = '55px arcadeClassic';
+    ctxRight.fillText(player.lives, 87, 147);
+    ctxRight.fillText('Level ' + gameLevel, 10, 80);
+}
+
+// Instatiates the array of enemies for each level
 var enemyLevel = function() {
     var speed =[];
     var randomSpeed;
@@ -204,15 +218,38 @@ var enemyLevel = function() {
     }
 }
 
+// Checks if the player and the heart have collided
 var addLife = function() {
-    ctx.drawImage(Resources.get(heart), 100, 150);
-    player.lives ++;
+    if (player.x + playerOffsetX < heart.x + heartOffsetX + heartWidth &&
+        player.x + playerOffsetX + playerWidth > heart.x + heartOffsetX &&
+        player.y + playerOffsetY < heart.y + heartOffsetY + heartHeight &&
+        player.y + playerOffsetY + playerWidth > heart.y + heartOffsetY) {
+        heart.display = false;
+        player.lives ++;
+    }
 }
 
-var allEnemies = [];
+// Now instantiate your objects.
+// Place all enemy objects in an array called allEnemies
+// Place the player object in a variable called player
+
+// Offsets in pixels for the actual space that player, enemy and
+// heart occupy inside their own image
+var playerOffsetX = 17;
+var playerOffsetY = 63;
+var playerWidth = 68;
+var playerHeight = 77;
+var enemyWidth = 100;
+var enemyHeight = 67;
+var heartOffsetX = 6;
+var heartOffsetY = 48;
+var heartWidth = 90;
+var heartHeight = 90;
+var allEnemies = []; // Array of Enemy objects
 var gameLevel = 1; //keep tracks the game level starting in level 1
-var player = new Player();
-var heart = 'images/Heart.png';
+var player = new Player(); // Instantiates the Player object
+var heart = new Heart(); // Instantiates the Heart object
+
 
 
 // This listens for key presses and sends the keys to your

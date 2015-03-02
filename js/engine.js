@@ -66,8 +66,8 @@ var Engine = (function(global) {
     function init() {
         reset();
         lastTime = Date.now();
-        playerSelection();
-        enemyLevel();
+        playerSelection(); // Allows to select the player sprite
+        enemyLevel(); // Instantiates the Enemy object
         main();
     }
 
@@ -97,6 +97,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        heart.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -144,31 +145,6 @@ var Engine = (function(global) {
         // White rectangle to avoid painting pixels of player out of bounds
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, 505, 50);
-
-
-        // ctx.lineWidth = 5;
-        // ctx.strokeStyle = 'black';
-        // // ctx.strokeRect(200, 400, 101, 171);
-        // // ctx.strokeRect(0, 225, 101, 171);
-        // ctx.strokeRect(0, 0, 20, 20);
-        // // ctx.strokeRect(0, 215, 101, 171);
-        // ctx.strokeRect(101, 0, 5 ,5);
-        // ctx.moveTo(0, 131);
-        // ctx.lineTo(505, 131);
-        // ctx.moveTo(0, 215);
-        // ctx.lineTo(505, 215);
-        // ctx.moveTo(0, 49);
-        // ctx.lineTo(505,49);
-        // ctx.strokeStyle = 'red';
-        // ctx.lineWidth = 1;
-        // ctx.strokeRect(0, 49, 10, 10);
-        // ctx.strokeRect(0, 58, 10, 10);
-        // ctx.strokeRect(0, 141, 10, 10);
-        // ctx.strokeRect(0, 224, 10, 10);
-        // ctx.strokeRect(0, 307, 10, 10);
-        // // ctx.strokeRect(0, 291, 100, 67);
-        // // ctx.strokeRect(17, 463, 68, 77);
-        // ctx.stroke();
     }
 
     /* This function is called by the render function and is called on each game
@@ -181,12 +157,24 @@ var Engine = (function(global) {
          */
         allEnemies.forEach(function(enemy) {
             enemy.render();
+
+            // Keeps checking the status of allEnemies[] in order to
+            // create more Enemy objects if necessary
             enemyLevel();
         });
 
         player.render();
-        player.winLevel();
-        winGame();
+        heart.render();
+        winLevel();
+
+        // Resets lives when you win the game
+        if (winGame()) {
+            player.lives = 3;
+        }
+
+        // Resets player to its original position when there is a collision
+        // with an enemy. When you run out of lives, the game is over
+        // and initalizes again.
         if(checkCollisions()) {
             player.resetPlayer();
             if (player.lives == 0) {
@@ -194,14 +182,40 @@ var Engine = (function(global) {
                 init();
             }
         } 
-        player.playerLives();
+
+        // Keeps refreshing the right canvas to make any updates needed for
+        // actual level or player lives
+        playerLives();
+
+        // Checks if the player gets a new life. This occurs when the heart
+        // and the player collide
+        addLife();
     }
 
+    /* Checks if the player has reached the water block and resets the player
+    * to the original position. If gameLevel is 3 then there will not be
+    * an available life
+    */
+    
+    function winLevel() {
+        if (player.y  == -15) {
+            gameLevel ++;
+            if (gameLevel < 3){
+                heart.display = true;
+            }
+            player.resetPlayer();
+        }
+    }
+
+    /* Checks if you reach the water block 3 times and resets gameLevel,
+    * instantiates allEnemies[] and makes a life available again*/
     function winGame() {
         if (gameLevel > 3) {
             gameLevel = 1;
             enemyLevel();
-            alert("CONGRATULATIONS, YOU WON!")
+            heart.display = true;
+            alert("CONGRATULATIONS, YOU WON!");
+            return true;
         }
     }
 
@@ -213,6 +227,7 @@ var Engine = (function(global) {
         // noop
         player.lives = 3;
         gameLevel = 1;
+        heart.display = true;
     }
 
     /* Go ahead and load all of the images we know we're going to need to

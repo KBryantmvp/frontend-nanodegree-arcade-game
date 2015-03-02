@@ -20,33 +20,39 @@
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
     <script type="text/javascript">
+    /* This script handles the left canvas*/
         var canvasLeft = document.getElementById('canvas-left');
         var ctxLeft = canvasLeft.getContext('2d');
         ctxLeft.fillStyle = 'white';
         var selectPlayer = [];
         var grassBlock = 'images/grass-block.png';
+        var index = 0;
+        var playerSelected = player.sprite;
 
+        /* Draws the inital player sprite and allows the buttons to 
+        * run through the array of sprites selectPlayer
+        */
         function playerSelection() {
             var boy = 'images/char-boy.png';
             var catGirl = 'images/char-cat-girl.png';
             var hornGirl = 'images/char-horn-girl.png';
             var pinkGirl = 'images/char-pink-girl.png';
             var princessGirl = 'images/char-princess-girl.png';
-            
+
             selectPlayer.push(boy, catGirl, hornGirl, pinkGirl, princessGirl);
+
             document.getElementById('leftBtn').addEventListener('click', leftSelec);
             document.getElementById('rightBtn').addEventListener('click', rightSelec);
             ctxLeft.drawImage(Resources.get(grassBlock), 100, -30);
             ctxLeft.drawImage(Resources.get(selectPlayer[index]), 100, -30);
         }
 
-        var index = 0;
-        var playerSelected = player.sprite;
-
+        /* Event that handles mouse clicks on the left button. It returns 
+        * the new url for the player sprite so the main canvas updates accordingly 
+        */
         function leftSelec() {
             if (index > 0) {
                 index --;
-                ctxLeft.fillRect(0, 0, canvasLeft.width, canvasLeft.height);
                 ctxLeft.drawImage(Resources.get(grassBlock), 100, -30);
                 ctxLeft.drawImage(Resources.get(selectPlayer[index]), 100, -30);
                 player.sprite = selectPlayer[index];
@@ -55,10 +61,12 @@
             }
         }
 
+        /* Event that handles mouse clicks on the right button. It returns 
+        * the new url for the player sprite so the main canvas updates accordingly
+        */
         function rightSelec() {
             if (index < selectPlayer.length - 1) {
                 index ++;
-                ctxLeft.fillRect(0, 0, canvasLeft.width, canvasLeft.height);
                 ctxLeft.drawImage(Resources.get(grassBlock), 100, -30);
                 ctxLeft.drawImage(Resources.get(selectPlayer[index]), 100, -30);
                 player.sprite = selectPlayer[index];
